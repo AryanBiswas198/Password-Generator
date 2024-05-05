@@ -5,7 +5,7 @@ import MainPage from "./components/MainPage";
 function App() {
   const [generatedPassword, setGeneratedPassword] = useState<string>("");
   const [passwordLength, setPasswordLength] = useState<number>(10);
-  const [isUppercase, setIsUppercase] = useState<boolean>(false);
+  const [isUppercase, setIsUppercase] = useState<boolean>(true);
   const [isLowercase, setIsLowercase] = useState<boolean>(false);
   const [isNumber, setIsNumber] = useState<boolean>(false);
   const [isSymbol, setIsSymbol] = useState<boolean>(false);
