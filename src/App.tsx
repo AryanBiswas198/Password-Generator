@@ -9,6 +9,37 @@ function App() {
   const [isLowercase, setIsLowercase] = useState<boolean>(false);
   const [isNumber, setIsNumber] = useState<boolean>(false);
   const [isSymbol, setIsSymbol] = useState<boolean>(false);
+  const [color, setColor] = useState<string>("");
+
+  function calculatePasswordStrength(){
+    let hasUpper = isUppercase;
+    let hasLower = isLowercase;
+    let hasNum = isNumber;
+    let hasSym = isSymbol;
+    let passwordLengthValid = passwordLength >= 8; // Password length >= 8
+  
+    if (hasUpper && hasLower && (hasNum || hasSym) && passwordLengthValid) {
+      return 100; // Strong password
+    } else if ((hasLower || hasUpper) && (hasNum || hasSym) && passwordLength >= 6) {
+      return 50; // Medium password
+    } else {
+      return 0; // Weak password
+    }
+  };
+
+  function getColor(){
+    const strength = calculatePasswordStrength();
+
+    if(strength < 50){
+      return "#f00";
+    }
+    else if(strength >= 50 && strength <= 75){
+      return "#ff0";
+    }
+    else{
+      return "#0f0";
+    }
+  }
 
   const generatePassword = (
     length: number,
@@ -60,6 +91,7 @@ function App() {
       isSymbol
     );
     setGeneratedPassword(newPassword);
+    setColor(getColor());
   }
 
   const handlePasswordLengthChange = (
@@ -98,6 +130,7 @@ function App() {
        isLowercase={isLowercase}
        isNumber={isNumber}
        isSymbol={isSymbol}
+       color={color}
        generatedPassword={generatedPassword}
        handlePasswordLengthChange={handlePasswordLengthChange}
        handleCheckboxChange={handleCheckboxChange}

@@ -1,5 +1,7 @@
 import React from "react";
 import { FaRegCopy } from "react-icons/fa6";
+import FormPage from "./FormPage";
+import {toast} from "react-hot-toast";
 
 interface Props{
     passwordLength: number;
@@ -7,13 +9,36 @@ interface Props{
     isLowercase: boolean;
     isNumber: boolean;
     isSymbol: boolean;
+    color: string,
     generatedPassword: string;
     handlePasswordLengthChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleCheckboxChange: (checkboxNumber: number) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const MainPage = ({passwordLength, isUppercase, isLowercase, isNumber, isSymbol, generatedPassword, handlePasswordLengthChange, handleCheckboxChange, handleSubmit}: Props) => {
+const MainPage = ({passwordLength, isUppercase, isLowercase, isNumber, isSymbol, color, generatedPassword, handlePasswordLengthChange, handleCheckboxChange, handleSubmit}: Props) => {
+
+    const handleCopyPassword = () => {
+        // Create a temporary input element
+        const tempInput = document.createElement("input");
+        tempInput.value = generatedPassword;
+        document.body.appendChild(tempInput);
+    
+        // Select the text in the input element
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // For mobile devices
+    
+        // Copy the selected text to the clipboard
+        document.execCommand("copy");
+    
+        // Remove the temporary input element
+        document.body.removeChild(tempInput);
+    
+        toast.success("Password copied to clipboard!");
+      };
+
+
+
   return (
     <div>
       {/* Input section */}
@@ -25,81 +50,20 @@ const MainPage = ({passwordLength, isUppercase, isLowercase, isNumber, isSymbol,
           value={generatedPassword}
         />
 
-        <FaRegCopy />
+        <FaRegCopy onClick={handleCopyPassword} />
       </div>
 
       {/* Main Form Section */}
-      <form onSubmit={handleSubmit}>
-        {/* Password Length */}
-        <div>
-          <h3>Password Length</h3>
-          <p>{passwordLength}</p>
-        </div>
-
-        {/* Input Slider */}
-        <div>
-          <input
-            type="range"
-            min="1"
-            max="20"
-            step="1"
-            value={passwordLength}
-            onChange={handlePasswordLengthChange}
-          />
-        </div>
-
-        {/* Four Checkboxes */}
-        <div className="flex flex-col gap-y-3">
-          <div className="flex gap-x-4">
-            <input
-              type="checkbox"
-              id="uppercase"
-              checked={isUppercase}
-              onChange={() => handleCheckboxChange(1)}
-            />
-            <label htmlFor="uppercase">Includes UpperCase Letters</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input
-              type="checkbox"
-              id="lowercase"
-              checked={isLowercase}
-              onChange={() => handleCheckboxChange(2)}
-            />
-            <label htmlFor="lowercase">Includes LowerCase Letters</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input
-              type="checkbox"
-              id="numbers"
-              checked={isNumber}
-              onChange={() => handleCheckboxChange(3)}
-            />
-            <label htmlFor="numbers">Includes Numbers</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input
-              type="checkbox"
-              id="symbols"
-              checked={isSymbol}
-              onChange={() => handleCheckboxChange(4)}
-            />
-            <label htmlFor="symbols">Includes Symbols</label>
-          </div>
-        </div>
-
-        {/* Strength section */}
-        <div className="flex justify-between">
-          <p>Strength</p>
-          <div>0</div>
-        </div>
-
-        {/* Button */}
-        <button type="submit">Generate Password</button>
-      </form>
+      <FormPage 
+        passwordLength={passwordLength}
+        isUppercase={isUppercase}
+        isLowercase={isLowercase}
+        isNumber={isNumber}
+        isSymbol={isSymbol}
+        color={color}
+        handlePasswordLengthChange={handlePasswordLengthChange}
+        handleCheckboxChange={handleCheckboxChange}
+        handleSubmit={handleSubmit} />
     </div>
   );
 };
