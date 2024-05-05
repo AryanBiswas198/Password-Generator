@@ -120,9 +120,9 @@ function App() {
   };
 
   return (
-    <div className="h-[100vh] w-[100vw] text-black flex flex-col justify-center items-center gap-y-5">
+    <div className="min-h-screen w-[100%] flex flex-col gap-y-4 justify-center items-center bg-gradient-to-br from-purple-900 via-purple-700 to-purple-900">
       {/* Title */}
-      <h1>Password Generator</h1>
+      <h1 className="text-3xl uppercase font-bold text-white tracking-wider">Password Generator</h1>
 
       <MainPage 
        passwordLength={passwordLength}
