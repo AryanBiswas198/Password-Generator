@@ -1,17 +1,72 @@
 import React, { useState } from "react";
 import "./App.css";
-import { FaRegCopy } from "react-icons/fa6";
+import MainPage from "./components/MainPage";
 
 function App() {
+  const [generatedPassword, setGeneratedPassword] = useState<string>("");
   const [passwordLength, setPasswordLength] = useState<number>(10);
   const [isUppercase, setIsUppercase] = useState<boolean>(false);
   const [isLowercase, setIsLowercase] = useState<boolean>(false);
   const [isNumber, setIsNumber] = useState<boolean>(false);
   const [isSymbol, setIsSymbol] = useState<boolean>(false);
 
-  const handlePasswordLengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordLength(parseInt(e.target.value))
+  const generatePassword = (
+    length: number,
+    useUppercase: boolean,
+    useLowercase: boolean,
+    useNumber: boolean,
+    useSymbol: boolean
+  ) => {
+    const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+    const numberChars = "0123456789";
+    const symbolChars = "!@#$%^&*()_+{}[]";
+
+    let chars = "";
+
+    if (useUppercase) {
+      chars += uppercaseChars;
+    }
+
+    if (useLowercase) {
+      chars += lowercaseChars;
+    }
+
+    if (useNumber) {
+      chars += numberChars;
+    }
+
+    if (useSymbol) {
+      chars += symbolChars;
+    }
+
+    let password = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      password += chars[randomIndex];
+    }
+
+    return password;
+  };
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const newPassword = generatePassword(
+      passwordLength,
+      isUppercase,
+      isLowercase,
+      isNumber,
+      isSymbol
+    );
+    setGeneratedPassword(newPassword);
   }
+
+  const handlePasswordLengthChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordLength(parseInt(e.target.value));
+  };
 
   const handleCheckboxChange = (checkboxNumber: number) => {
     switch (checkboxNumber) {
@@ -37,66 +92,16 @@ function App() {
       {/* Title */}
       <h1>Password Generator</h1>
 
-      {/* Input section */}
-      <div className="flex flex-row items-center justify-center">
-        <input type="text" className="border-2 rounded-xl" />
-
-        <FaRegCopy />
-      </div>
-
-      {/* Main Form Section */}
-      <form>
-        {/* Password Length */}
-        <div>
-          <h3>Password Length</h3>
-          <p>
-            {passwordLength}
-          </p>
-        </div>
-
-        {/* Input Slider */}
-        <div>
-          <input 
-            type="range" 
-            min="1" 
-            max="20" 
-            step="1" 
-            value={passwordLength}
-            onChange={handlePasswordLengthChange} />
-        </div>
-
-        {/* Four Checkboxes */}
-        <div className="flex flex-col gap-y-3">
-          <div className="flex gap-x-4">
-            <input type="checkbox" id="uppercase" checked={isUppercase} onChange={() => handleCheckboxChange(1)}/>
-            <label htmlFor="uppercase">Includes UpperCase Letters</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input type="checkbox" id="lowercase" checked={isLowercase} onChange={() => handleCheckboxChange(2)} />
-            <label htmlFor="lowercase">Includes LowerCase Letters</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input type="checkbox" id="numbers" checked={isNumber} onChange={() => handleCheckboxChange(3)} />
-            <label htmlFor="numbers">Includes Numbers</label>
-          </div>
-
-          <div className="flex gap-x-4">
-            <input type="checkbox" id="symbols" checked={isSymbol} onChange={() => handleCheckboxChange(4)} />
-            <label htmlFor="symbols">Includes Symbols</label>
-          </div>
-        </div>
-
-        {/* Strength section */}
-        <div className="flex justify-between">
-          <p>Strength</p>
-          <div>0</div>
-        </div>
-
-        {/* Button */}
-        <button type="submit">Generate Password</button>
-      </form>
+      <MainPage 
+       passwordLength={passwordLength}
+       isUppercase={isUppercase}
+       isLowercase={isLowercase}
+       isNumber={isNumber}
+       isSymbol={isSymbol}
+       generatedPassword={generatedPassword}
+       handlePasswordLengthChange={handlePasswordLengthChange}
+       handleCheckboxChange={handleCheckboxChange}
+       handleSubmit={handleSubmit} />
     </div>
   );
 }
